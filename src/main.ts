@@ -20,11 +20,14 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { App } from './app/app';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';   // ✅ your routes file
-
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from './environments/environments.prod';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+
 
 bootstrapApplication(App, {
   providers: [
@@ -34,6 +37,12 @@ bootstrapApplication(App, {
     provideFirestore(() => getFirestore()),
 
     // ✅ Router provider
-    provideRouter(routes)
+    provideRouter(routes),
+    provideAnimations(),
+    provideToastr({        // Global toastr configuration
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
   ]
 }).catch(err => console.error(err));
