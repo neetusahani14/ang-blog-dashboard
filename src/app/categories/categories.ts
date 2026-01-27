@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 
 import { CategoriesList } from '../services/categories-list';
 import { Category } from '../models/category';
@@ -13,11 +13,17 @@ import { Category } from '../models/category';
 })
 export class Categories {
 
+  categoryArray: any[]= [];
+  formCategory : any;
+  formStatus: string ='Add';
+  categoryId: any;
+
   constructor(private categorySer:CategoriesList){}
 
   ngOnInit():void{
     this.categorySer.loadData().subscribe(val=>{
       console.log(val);
+      this.categoryArray = val;
       
     })
   }
@@ -27,33 +33,27 @@ export class Categories {
       category : categoryForm.value.category,
     
     }
-     this.categorySer.saveData(categoryData);
+    if(this.formStatus == 'Add')
+    {
+       this.categorySer.saveData(categoryData);
+     categoryForm.reset();
+    }
+    else if(this.formStatus == 'Edit')
+    {
+      this.categorySer.updateData(this.categoryId, categoryData);
+      categoryForm.reset();
+      this.formStatus = 'Add';
+    }   
+  }
 
-//      let subCategoryData= {
-//       subCategory : 'subCategory1'
-//     }
-    
-// // 
-    // try {
-    //   const docRef = await addDoc(collection(this.firestore, 'categories'), categoryData);
-    //   console.log(docRef.id);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    // addDoc(collection(this.firestore, 'categories'), categoryData).then((docRef)=>{
-    //   console.log(docRef.id);
-    // addDoc(collection(this.firestore, 'categories',docRef.id,'subCategories'), subCategoryData).then((subCatRef)=>{
-    //     console.log(subCatRef.id);
-    
-    // addDoc(collection(this.firestore, 'categories',docRef.id,'subsubCategories',subCatRef.id,'items'), { itemName: 'item1' }).then((itemRef)=>{
-    //       console.log('saved successfully',itemRef.id);  
-    //   })
-    // })
-      
-    // })
-    
-  //   .catch(error=>{ console.log(error) });
-    
+  onEdit(category:any, id:any){
+    this.formCategory = category;
+    this.formStatus = 'Edit';
+    this.categoryId = id; 
+  }
+
+  onDelete(id:any){
+    this.categorySer.deleteData(id);
   }
 }
 

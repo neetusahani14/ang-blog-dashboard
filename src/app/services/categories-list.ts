@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, collectionData,doc, updateDoc,deleteDoc } from '@angular/fire/firestore';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,7 +14,6 @@ export class CategoriesList {
   constructor(private toastr:ToastrService){
 
   }
-  
 
   async saveData(data:any){
     
@@ -32,43 +31,6 @@ export class CategoriesList {
     .catch(error=>{ console.log(error) });
   }
 
-  // loadData(){
-  //   addDoc(collection(this.firestore, 'categories'), data).snapshotChanges().pipe(
-  //     map(actions =>{
-  //       actions.map(a=>
-  //       {
-  //         const data = a.payload.doc.data();
-  //         const id = a.payload.doc.id;
-
-  //       }
-  //       )
-  //     })
-  //   )
-  // }
-
-//   loadData() {
-//   return this.firestore.collection('categories').snapshotChanges().pipe(
-//     map(actions =>
-//       actions.map(a => {
-//         const data = a.payload.doc.data() as any;
-//         const id = a.payload.doc.id;
-//         return { id, ...data };   // ✅ return combined object
-//       })
-//     )
-//   );
-// }
-
-//   async addCategory(data: any) {
-//   // Get a reference to the "categories" collection
-//   const colRef = collection(this.firestore, 'categories');
-
-//   // Add a new document with the provided data
-//   const docRef = await addDoc(colRef, data);
-
-//   // Return the new document ID
-//   return docRef.id;
-// }
-
  // ✅ Read categories with IDs
   loadData(): Observable<any[]> {
     const colRef = collection(this.firestore, 'categories');
@@ -82,6 +44,27 @@ export class CategoriesList {
     return { id: docRef.id, ...data };
   }
 
+  updateData(id: string, editData: any) {
+  const docRef = doc(this.firestore, 'categories', id);
+  updateDoc(docRef, editData).then(()=>
+  {
+      this.toastr.success('Data updated successfully...!')
+  })
+  }
+
+   deleteData(id: string) {
+    const docRef = doc(this.firestore, 'categories', id);
+
+    deleteDoc(docRef)
+      .then(() => {
+        // ✅ Success toast
+        this.toastr.success('Category deleted successfully!', 'Deleted');
+      })
+      .catch(error => {
+        // ❌ Error toast
+        this.toastr.error('Delete failed: ' + error.message, 'Error');
+      });
+  }
 
   
 }
