@@ -26,6 +26,9 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from './environments/environments.prod';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { importProvidersFrom } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 
 
 
@@ -39,10 +42,14 @@ bootstrapApplication(App, {
     // ✅ Router provider
     provideRouter(routes),
     provideAnimations(),
+    provideHttpClient(),
     provideToastr({        // Global toastr configuration
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
+        // ✅ Angular Editor provider
+    importProvidersFrom(AngularEditorModule),
+
   ]
 }).catch(err => console.error(err));
