@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, collectionData,doc, updateDoc,deleteDoc } from '@angular/fire/firestore';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -65,6 +64,7 @@ export class CategoriesList {
         this.toastr.error('Delete failed: ' + error.message, 'Error');
       });
   }
+
 
   
 }

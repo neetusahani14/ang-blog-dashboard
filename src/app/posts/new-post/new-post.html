@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label for="">Permalink</label>
                             <input type="text" class="form-control" name="permalink" formControlName="permalink"
-                                
+                                readonly
                                 [ngClass]="{'is-invalid': postForm.get('permalink')?.invalid && postForm.get('permalink')?.touched,}">
 
                             @if (postForm.get('permalink')?.touched && postForm.get('permalink')?.errors?.['required'])
@@ -80,7 +80,6 @@
                     <label for="">Post Image</label>
                     <img [src]="imgSrc" alt="placeholder" class="form-control img-fluid img-preview">
                     <input type="file" class="form-control" accept="image/*" (change)="showPreview($event)"
-                        formControlName="postImg"
                         [ngClass]="{'is-invalid': postForm.get('postImg')?.invalid && postForm.get('postImg')?.touched,}">
                     @if (postForm.get('postImg')?.touched && postForm.get('postImg')?.errors?.['required']) {
                     <div class="alert alert-danger">
