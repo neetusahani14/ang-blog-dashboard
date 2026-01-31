@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { Post } from '../../services/post';
 import { CommonModule } from '@angular/common';
+import { Posts } from '../../services/posts';
 
 
 @Component({
@@ -14,7 +14,7 @@ export class AllPost {
 
   postArray: any[] = [];
 
-  constructor(private postService: Post){}
+  constructor(private postService: Posts){}
 
   ngOnInit():void{
     this.postService.loadData().subscribe(val=>{
