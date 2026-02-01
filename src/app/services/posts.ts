@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { Firestore, collection, addDoc, collectionData, doc, updateDoc, deleteDoc, docData } from '@angular/fire/firestore';
@@ -11,7 +12,9 @@ import { Observable } from 'rxjs';
 export class Posts {
 
   firestore = inject(Firestore);
-  constructor(private toastr: ToastrService, private router: Router) { }
+  constructor(private toastr: ToastrService, private router: Router,
+    private http: HttpClient
+  ) { }
 
   // ✅ Load all posts
 
@@ -21,11 +24,19 @@ export class Posts {
   }
 
   // ✅ Add new post
-  async addPost(data: any) {
-    const colRef = collection(this.firestore, 'posts');
-    const docRef = await addDoc(colRef, data);
-    return { id: docRef.id, ...data };
-  }
+async addPost(data: any, cloudinaryResponse?: any) {
+  const colRef = collection(this.firestore, 'posts');
+
+  // ✅ Merge Cloudinary response if available
+  const postData = {
+    ...data,
+    postImgPath: cloudinaryResponse?.secure_url || data.postImgPath,
+    postImgId: cloudinaryResponse?.public_id || data.postImgId
+  };
+
+  const docRef = await addDoc(colRef, postData);
+  return { id: docRef.id, ...postData };
+}
 
   loadOneData(id: string) {
     const docRef = doc(this.firestore, 'posts', id);
@@ -42,5 +53,58 @@ export class Posts {
 
     return { id, ...data };
   }
+
+// async deletePostWithImage(postId: string, publicId: string) {
+//   try {
+//     this.http.delete<any>(`http://localhost:3000/delete-image/${publicId}`)
+//       .subscribe({
+//         next: async (res) => {
+//           if (res.success) {
+//             this.toastr.success('Image deleted successfully!');
+
+//             // ✅ Delete Firestore post
+//             const docRef = doc(this.firestore, 'posts', postId);
+//             await deleteDoc(docRef);
+
+//             this.toastr.success('Post deleted successfully!', 'Success');
+//           } else {
+//             this.toastr.error('Failed to delete image');
+//           }
+//         },
+//         error: (err) => {
+//           console.error('Delete error:', err);
+//           this.toastr.error('Error deleting image');
+//         }
+//       });
+//   } catch (error) {
+//     console.error('Delete flow error:', error);
+//     this.toastr.error('Error deleting post');
+//   }
+// }
+
+async deletePostWithImage(postId: string, publicId: string) {
+  console.log('Deleting with publicId:', publicId); // ✅ Debugging
+
+  if (!publicId) {
+    this.toastr.error('Image ID not found, cannot delete');
+    return;
+  }
+
+  this.http.delete<any>(`http://localhost:3000/delete-image/${publicId}`)
+    .subscribe({
+      next: async (res) => {
+        if (res.success) {
+    
+          const docRef = doc(this.firestore, 'posts', postId);
+          await deleteDoc(docRef);
+          this.toastr.warning('Post deleted successfully!');
+        }
+      },
+      error: (err) => {
+        console.error('Delete error:', err);
+        this.toastr.error('Error deleting image');
+      }
+    });
+}
 
 }

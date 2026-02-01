@@ -23,4 +23,8 @@ export class AllPost {
     });
   }
 
+  onDelete(postImgPath: string, postId: string){
+    this.postService.deletePostWithImage(postId, postImgPath);
+  }
+
 }

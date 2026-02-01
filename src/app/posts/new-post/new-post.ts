@@ -188,6 +188,7 @@ export class NewPost {
             excerpt: [val.excerpt, [Validators.required, Validators.minLength(50)]],
             category: [`${val.category.categoryId}-${val.category.category}`, Validators.required],
             postImg: [val.postImgPath, Validators.required],
+            postImgId: [val.postImgId, Validators.required],   // ✅ new field
             content: [val.content, Validators.required]
           });
           this.imgSrc = val.postImgPath;
@@ -212,6 +213,7 @@ export class NewPost {
       excerpt: ['', [Validators.required, Validators.minLength(50)]],
       category: ['', Validators.required],
       postImg: ['', Validators.required],
+      postImgId: ['', Validators.required],   // ✅ new field
       content: ['', Validators.required]
     });
   }
@@ -245,20 +247,39 @@ export class NewPost {
       formData.append('file', file);
       formData.append('upload_preset', 'angular_upload');
 
+      // fetch('https://api.cloudinary.com/v1_1/dkevofpqe/image/upload', {
+      //   method: 'POST',
+      //   body: formData
+      // })
+      //   .then(res => res.json())
+      //   .then(data => {
+      //     // ✅ Patch both secure_url and public_id
+      //     this.postForm.patchValue({ 
+      //       postImg: data.secure_url,
+      //       postImgId: data.public_id
+      //     });
+      //     this.imgSrc = data.secure_url;
+
+      //     // ✅ If editing, update Firestore immediately
+      //     if (this.postId) {
+      //       this.postService.updatePost(this.postId, { 
+      //         postImgPath: data.secure_url,
+      //         postImgId: data.public_id
+      //       });
+      //       this.toastr.success('Image updated successfully!');
+      //     }
+      //   });
       fetch('https://api.cloudinary.com/v1_1/dkevofpqe/image/upload', {
         method: 'POST',
         body: formData
       })
         .then(res => res.json())
         .then(data => {
-          this.postForm.patchValue({ postImg: data.secure_url });
+          this.postForm.patchValue({
+            postImg: data.secure_url,
+            postImgId: data.public_id   // ✅ save public_id
+          });
           this.imgSrc = data.secure_url;
-
-          // ✅ If editing, update Firestore immediately
-          if (this.postId) {
-            this.postService.updatePost(this.postId, { postImgPath: data.secure_url });
-            this.toastr.success('Image updated successfully!');
-          }
         });
     }
   }
@@ -272,7 +293,8 @@ export class NewPost {
         categoryId: splitted[0],
         category: splitted[1]
       },
-      postImgPath: this.postForm.value.postImg,
+      postImgPath: this.postForm.value.postImg,   // secure_url
+      postImgId: this.postForm.value.postImgId,   // public_id ✅
       excerpt: this.postForm.value.excerpt,
       content: this.postForm.value.content,
       isFeatured: false,
