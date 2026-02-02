@@ -107,4 +107,10 @@ async deletePostWithImage(postId: string, publicId: string) {
     });
 }
 
+markAsFeatured(postId: string, isFeatured: boolean) {
+  const docRef = doc(this.firestore, 'posts', postId);
+  return updateDoc(docRef, { isFeatured }).then(() => {
+    this.toastr.info('Featured status updated');
+  });
+}
 }

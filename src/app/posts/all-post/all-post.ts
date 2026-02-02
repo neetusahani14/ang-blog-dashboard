@@ -27,4 +27,12 @@ export class AllPost {
     this.postService.deletePostWithImage(postId, postImgPath);
   }
 
+  onFeatured(postId: string, value: boolean){
+    const featuredData = {  
+      isFeatured: value
+    }
+   this.postService.markAsFeatured(postId, value);
+  }
+
+
 }
