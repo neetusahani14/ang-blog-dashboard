@@ -48,7 +48,7 @@ body{
     color: var(--primary-color);
 }
 
-input[type=text], input[type=email]{
+input[type=text], input[type=email], input[type=password], textarea, select{
     height: 50px;
     padding-left: 20px;
     width: 100% ;
@@ -59,7 +59,7 @@ input[type=text], input[type=email]{
     height: 48px;
     background-color: var(--primary-color);
     border: none;
-    font-size: 13px;
+    
     color: #E5F5EA;
 
 }

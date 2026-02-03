@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="card p-5 shadow-effect bg-secondary-theme">
+                <div class="card-body">
+                    <div class="text-center">
+                        <h3 class="text-theme-primary">
+                            Login
+                        </h3>
+                        <p>Please enter your credentials to login.</p>
+                    </div>
+                    <form action="" #loginForm=ngForm (ngSubmit)="onSubmit(loginForm.value)">
+                        <div class="form-group">
+                            <input 
+                            type="email" 
+                            class="form-control" 
+                            placeholder="Enter your email" 
+                            ngModel 
+                            name="email"
+                            #Email="ngModel"
+                            required
+                            email
+                            [ngClass]="{'is-invalid': Email.touched && Email.invalid}">
+                            @if(Email.touched && Email.invalid) {
+                                <div class="alert alert-danger">
+                                    @if(Email.errors?.['required']) {
+                                         <div>Email cannot be empty.</div>
+                                    }
+                                    @if(Email.errors?.['email']) {
+                                        <div>Please enter a valid email address.</div>
+                                    }
+                                
+                            </div>
+                            }
+                            
+                        </div>
+                        <div class="form-group">
+                            <input 
+                            type="password" 
+                            class="form-control"
+                            placeholder="Enter your password" 
+                            ngModel 
+                            name="password"
+                            #Password="ngModel"
+                            required
+                            [ngClass]="{'is-invalid': Password.touched && Password.invalid}">
+                            @if(Password.touched && Password.invalid) {
+                                <div class="alert alert-danger">
+                                Password cannot be empty.
+                            </div>
+                            }
+                        </div>
+                        <button class="btn btn-info btn-block btn-theme" [disabled]="loginForm.invalid">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

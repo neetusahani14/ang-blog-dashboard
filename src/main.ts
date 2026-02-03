@@ -32,6 +32,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 
 
+
 bootstrapApplication(App, {
   providers: [
     // ✅ Firebase providers
