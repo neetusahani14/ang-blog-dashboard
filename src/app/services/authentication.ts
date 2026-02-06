@@ -8,6 +8,8 @@ import { BehaviorSubject } from 'rxjs';
 export class Authentication {
 
   loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isLoggedInGuard: boolean = false;
+
   constructor(private auth: Auth, private toastr: ToastrService,
     private router: Router
   ) {}
@@ -18,6 +20,7 @@ export class Authentication {
         this.toastr.success('Login successful!');
         this.loadUser();
         this.loggedIn.next(true);
+        this.isLoggedInGuard = true;
         this.router.navigate(['/']);
       })
       .catch(err => {
@@ -39,7 +42,8 @@ export class Authentication {
       this.toastr.success('Logout successful!');
       this.router.navigate(['/login']);
       localStorage.removeItem('user'); 
-      this.loggedIn.next(false); 
+      this.loggedIn.next(false);
+      this.isLoggedInGuard = false; 
   }).catch((error) => {
       console.error('Error signing out: ', error);
   });
