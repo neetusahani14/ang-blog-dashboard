@@ -51,20 +51,17 @@ export class CategoriesList {
   })
   }
 
-   deleteData(id: string) {
-    const docRef = doc(this.firestore, 'categories', id);
-
+  
+    deleteData(id: string) {
+    const docRef = doc(this.firestore, `categories/${id}`);
     deleteDoc(docRef)
       .then(() => {
-        // ✅ Success toast
-        this.toastr.success('Category deleted successfully!', 'Deleted');
+        this.toastr.success('Category  deleted successfully!', 'Deleted');
       })
       .catch(error => {
-        // ❌ Error toast
         this.toastr.error('Delete failed: ' + error.message, 'Error');
       });
   }
-
 
   
 }
