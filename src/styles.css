@@ -5,9 +5,9 @@
 @import "ngx-toastr/toastr" ;
 
 :root{
-    --primary-color: #026464;
-    --secondary-color: #E5F5EA ;
-    --body-text-color: #596392;
+    --primary-color: #61017b;
+    --secondary-color: #efe5f5 ;
+    --body-text-color: #0b0109;
     --navbar-footer-color:#f9f9f9;
 }
 
@@ -15,7 +15,8 @@ body{
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     color: var(--body-text-color);
-    display: contents;
+    /* display: contents; */
+    background-color: rgb(240, 249, 255);
   
 }
 
